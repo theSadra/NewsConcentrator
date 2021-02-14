@@ -3,6 +3,45 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">به پنل مدیریت خوش‌آمدید</h1>
 </div>
+
+<div class="maindiv container">
+    <a class="catlink" asp-controller="TelegramChannels" asp-action="Index">
+    <div class="card " style="width: 18rem;">
+        <img src="./Pictures/TelegramSimpleHero.png" class="card-img-top" alt="TelegramSimpleHero">
+
+        <div class="card-body">
+            <p class="card-text" style="text-align: center !important;">پنل مدیریت کانال‌های تلگرام</p>
+        </div>
+    </div>
+    </a>
+</div>
+<style>
+
+    @@media only screen and (max-width: 720px) {
+
+        .maindiv{
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            }
+    }
+
+    .catlink:hover {
+        cursor: pointer;
+    }
+
+    .catlink:hover {
+    }
+
+    .display-4 {
+        margin-top: 40px !important;
+    }
+
+    .maindiv {
+        height: 100%;
+        margin-top: 50px;
+        display: flex;
+    }
+</style>
