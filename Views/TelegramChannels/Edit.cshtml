@@ -3,41 +3,39 @@
 @{
     ViewData["Title"] = "Edit";
 }
-
-<h1>Edit</h1>
-
-<h4>TelegramChannel</h4>
+<h1>@Model.ChannelUserName</h1>
+<div>
+    <a asp-action="Index">بازگشت به لیست</a>
+</div>
 <hr />
-<div class="row">
+<div class="row" style="direction: ltr;">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ChannelId" />
-            <div class="form-group">
-                <label asp-for="ChannelUserName" class="control-label"></label>
-                <input asp-for="ChannelUserName" class="form-control" />
-                <span asp-validation-for="ChannelUserName" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="HasContainFilter" /> @Html.DisplayNameFor(model => model.HasContainFilter)
-                </label>
-            </div>
             <div class="form-group">
                 <label asp-for="IntervalMins" class="control-label"></label>
                 <input asp-for="IntervalMins" class="form-control" />
                 <span asp-validation-for="IntervalMins" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="ذخیره تایم" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
+<div class="row mustcon">
+    
+    
+    
+    
+    
 
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
+<hr />
+
+
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

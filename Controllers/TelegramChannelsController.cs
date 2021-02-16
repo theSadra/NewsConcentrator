@@ -88,18 +88,23 @@ namespace NewsConcentratorSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ChannelId,ChannelUserName,HasContainFilter,IntervalMins")] TelegramChannel telegramChannel)
+        public async Task<IActionResult> Edit(int id, [Bind("ChannelId,IntervalMins")] TelegramChannel telegramChannel)
         {
             if (id != telegramChannel.ChannelId)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            
                 try
                 {
-                    _context.Update(telegramChannel);
+                 var channel =  _context.Channels.Where(c => c.ChannelId == telegramChannel.ChannelId).FirstOrDefault();
+
+
+                  channel.IntervalMins = telegramChannel.IntervalMins;
+
+
+                    _context.Update(channel);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -113,9 +118,7 @@ namespace NewsConcentratorSystem.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(telegramChannel);
+                return RedirectToAction(nameof(Edit), new { id = telegramChannel.ChannelId });
         }
 
         // GET: TelegramChannels/Delete/5

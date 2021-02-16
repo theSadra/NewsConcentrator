@@ -14,14 +14,9 @@ namespace NewsConcentratorSystem.Models
         [Required]
         [Display(Name = "یوزر نیم کانال")]
         public string ChannelUserName { get; set; }
-
-        [Display(Name = "فیلتر کلمه اجباری")]
-        public bool HasContainFilter { get; set; }
-
+        [Display(Name = "تایم واکشی مطالب بر دقیقه")]
         public int IntervalMins { get; set; }
 
-        [Display(Name = "وضعیت فعالیت")]
-        public bool ActivityStatus { get; set; }
 
 
         //Navigation Properties
