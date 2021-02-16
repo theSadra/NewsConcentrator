@@ -17,13 +17,17 @@ namespace NewsConcentratorSystem.Models
 
         [Display(Name = "فیلتر کلمه اجباری")]
         public bool HasContainFilter { get; set; }
+        [Display(Name = "فیلتر جایگذاری کلمه")]
+        public bool HasReplaceWordFilter { get; set; }
+        [Display(Name = "فیلتر بریدن کلمه")]
+        public bool HasCutAfterFilter { get; set; }
 
         public int IntervalMins { get; set; }
 
         [Display(Name = "وضعیت فعالیت")]
         public bool ActivityStatus { get; set; }
 
-
+            
         //Navigation Properties
         [Display(Name = "کلمه های اجباری")]
         public ICollection<MessageMustContain> MustContainWords { get; set; }
