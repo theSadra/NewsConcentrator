@@ -19,7 +19,7 @@
                 <span asp-validation-for="IntervalMins" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="ذخیره تایم" class="btn btn-primary" />
+                <input type="submit" value="ذخیره تایم" class="btn btn-primary"/>
             </div>
         </form>
     </div>
@@ -27,7 +27,39 @@
 <div class="row mustcon">
     
     
-    
+    <h3>فیلتر جایگذینی کلمات</h3>
+
+    <p>
+        <a role="button" class="btn btn-primary" style="text-align: left" asp-route-id="@Model.ChannelId" asp-controller="MessageReplaceWords" asp-action="Create">افزودن</a>
+    </p>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th>
+                کلمه هدف
+            </th>
+            <th>
+                جایگذین
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.ReplaceWords) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Word)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReplaceTo)
+                </td>
+                <td>
+                    <a role="button" class="btn btn-danger" asp-controller="MessageReplaceWords" asp-action="Delete" asp-route-id="@item.MRWId">حذف</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
     
     
 
