@@ -13,6 +13,11 @@ namespace NewsConcentratorSystem.Models
         {
             
         }
+
+        public NewsConcentratorDbContext()
+        {
+            
+        }
         public DbSet<TelegramChannel> Channels { set; get; }
         public DbSet<MessageMustContain> MessageMustContains { get; set; }
         public DbSet<MessageReplaceWord> MessageReplaceWords { get; set; }
