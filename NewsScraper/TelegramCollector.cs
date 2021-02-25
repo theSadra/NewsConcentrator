@@ -16,14 +16,16 @@ namespace NewsConcentratorSystem.NewsScraper
 {
     public class TelegramCollector
     {
-        Timer keepconnected_timer = new Timer(30000);
+        Timer Collector = new Timer(30000);
         public TelegramClient client;
         public NewsConcentratorDbContext _Context;
         public TelegramCollector(TelegramClient client, NewsConcentratorDbContext context)
         {
             this.client = client;
             this._Context = context;
-            keepconnected_timer.Elapsed += GetNewses;
+            Collector.Elapsed += GetNewses;
+            Collector.Enabled = true;
+            Collector.Start();
         }
 
 
@@ -93,6 +95,8 @@ namespace NewsConcentratorSystem.NewsScraper
                 }
 
                 #endregion
+
+
 
 
             }

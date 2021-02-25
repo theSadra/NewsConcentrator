@@ -19,78 +19,80 @@ namespace NewsConcentratorSystem
     {
        public static Timer keepconnected_timer = new Timer(30000);
 
-        //private static TelegramClient client = null;
-        //public static NewsConcentratorDbContext DbContext = new NewsConcentratorDbContext();
+        private static TelegramClient client = null;
+        public static NewsConcentratorDbContext DbContext = new NewsConcentratorDbContext();
 
-        //static void OnkeepAlive(Object source, System.Timers.ElapsedEventArgs e)
-        //{
-        //    try
-        //    {
-        //        //send message
-        //        client.SendMessageAsync(new TLInputPeerUser() { UserId = 1585250390 }, "trying to keep alive...");
+        static void OnkeepAlive(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+                //send message
+                client.SendMessageAsync(new TLInputPeerUser() { UserId = 1585250390 }, "trying to keep alive...");
 
-        //    }
-        //    catch
-        //    {
-        //        Console.WriteLine("Err in keeping alive opration......");
-        //        Console.ReadKey();
-        //        //countinue
-        //    }
-        //}
-        
+            }
+            catch
+            {
+                Console.WriteLine("Err in keeping alive opration......");
+                Console.ReadKey();
+                //countinue
+            }
+        }
+
         public static void Main(string[] args)
         {
 
-            //    #region TelegramClientConfiguraition
-            //    Timer keepconnected_timer = new Timer(30000);
-            //    keepconnected_timer.Elapsed += OnkeepAlive;
+            #region TelegramClientConfiguraition
+            Timer keepconnected_timer = new Timer(30000);
+            keepconnected_timer.Elapsed += OnkeepAlive;
 
 
 
-            //    int app_id = 2372991;
-            //    string api_hash = "c7f27d96d2b3409d0b48d9682a3314a4";
-            //    var store = new FileSessionStore();
+            int app_id = 2372991;
+            string api_hash = "c7f27d96d2b3409d0b48d9682a3314a4";
+            var store = new FileSessionStore();
 
-            //    client = new TelegramClient(app_id, api_hash, store);
+            client = new TelegramClient(app_id, api_hash, store);
 
-            //    TelegramClientManager._client = client;
-            //    //await TelegramClientManager.CreateClientbyAuthorize(app_id, api_hash);
-            //    //client = TelegramClientManager._client;
-
-
-            //    while (true)
-            //    {
-            //        try
-            //        {
-            //            //send message
-            //             client.ConnectAsync(false).Wait();
-            //            break;
-
-            //        }
-            //        catch (Exception e)
-            //        {
-            //            Console.WriteLine(e);
-            //            Console.WriteLine("/n /n any key to retying...");
-            //            Console.ReadKey();
-            //            //countinue
-            //        }
-            //    }
-
-            //    OnkeepAlive(null, null);
-            //    keepconnected_timer.Enabled = true;
-
-            //    //var client = new TelegramClient(app_id,api_hash);
-
-            //    //Console.Write("Enter numberphone:");
-            //    //var numberphone = Console.ReadLine();
-
-            //    //var hash = await client.SendCodeRequestAsync(numberphone);
-            //    Console.WriteLine("Is connected: " + client.IsConnected);
-            //    Console.WriteLine("Is user authorized: " + client.IsUserAuthorized());
-            //    // Console.Write("Enter Verifacation code:");
+            TelegramClientManager._client = client;
+            //await TelegramClientManager.CreateClientbyAuthorize(app_id, api_hash);
+            //client = TelegramClientManager._client;
 
 
-            //    #endregion
+            while (true)
+            {
+                try
+                {
+                    //send message
+                    client.ConnectAsync(false).Wait();
+                    break;
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    Console.WriteLine("/n /n any key to retying...");
+                    Console.ReadKey();
+                    //countinue
+                }
+            }
+
+            OnkeepAlive(null, null);
+            keepconnected_timer.Enabled = true;
+
+            //var client = new TelegramClient(app_id,api_hash);
+
+            //Console.Write("Enter numberphone:");
+            //var numberphone = Console.ReadLine();
+
+            //var hash = await client.SendCodeRequestAsync(numberphone);
+            NewsConcentratorDbContext db = new NewsConcentratorDbContext();
+            Console.WriteLine("Is connected: " + client.IsConnected);
+            Console.WriteLine("Is user authorized: " + client.IsUserAuthorized());
+            TelegramCollector collector = new TelegramCollector(client,db);
+            // Console.Write("Enter Verifacation code:");
+
+
+            #endregion
 
             //    Console.WriteLine("hellop hellop wordpppp");
             CreateHostBuilder(args).Build().Run();
