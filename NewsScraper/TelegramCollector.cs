@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.EntityFrameworkCore;
 using NewsConcentratorSystem.Models;
@@ -10,6 +10,7 @@ using NewsConcentratorSystem.NewsScraper;
 using TLSchema;
 using TLSchema.Messages;
 using TLSharp;
+using Timer = System.Timers.Timer;
 
 namespace NewsConcentratorSystem.NewsScraper
 {
@@ -27,10 +28,13 @@ namespace NewsConcentratorSystem.NewsScraper
 
 
 
-
+        //Collector Unit...
         public async void GetNewses(Object source, System.Timers.ElapsedEventArgs e)
         {
+            Program.keepconnected_timer.Stop();
+            Thread.Sleep(1200);
             var dialogs = (TLDialogsSlice)await client.GetUserDialogsAsync();
+            Program.keepconnected_timer.Start();
             var channels = _Context.Channels.ToList();
 
 
@@ -43,6 +47,9 @@ namespace NewsConcentratorSystem.NewsScraper
                 var textmessages = messages.Where(m => m.Media == null)/*.Where("")* for ensure message in not forwarded*/.Select(m => m.Message);
 
 
+                #region MustCuntainFiltering
+
+                
 
                 //MustContainFilter
                 _Context.Entry(channel).Collection(channels => channel.MustContainWords).Load();
@@ -85,6 +92,7 @@ namespace NewsConcentratorSystem.NewsScraper
 
                 }
 
+                #endregion
 
 
             }

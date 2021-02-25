@@ -18,6 +18,7 @@ namespace NewsConcentratorSystem.Models
         {
             
         }
+        public DbSet<TelegramScraperSettings> Setting { get; set; }
         public DbSet<TelegramChannel> Channels { set; get; }
         public DbSet<MessageMustContain> MessageMustContains { get; set; }
         public DbSet<MessageReplaceWord> MessageReplaceWords { get; set; }

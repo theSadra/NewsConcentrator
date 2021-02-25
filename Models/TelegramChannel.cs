@@ -14,8 +14,6 @@ namespace NewsConcentratorSystem.Models
         [Required]
         [Display(Name = "یوزر نیم کانال")]
         public string ChannelUserName { get; set; }
-        [Display(Name = "تایم واکشی مطالب بر دقیقه")]
-        public int IntervalMins { get; set; }
 
 
 

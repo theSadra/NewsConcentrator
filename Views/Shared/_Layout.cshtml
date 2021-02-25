@@ -39,7 +39,7 @@
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">سیستم جمع آوری خبر</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"</span>
+                    <span class="navbar-toggler-icon"/>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between" dir="rtl">
                     <ul class="navbar-nav flex-grow-1">
@@ -49,6 +49,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="TelegramChannels" asp-action="Index">
                                 پنل مدیریت تلگرام
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="TelegramScraperSettings" asp-action="Edit">
+                                تنظیمات
                             </a>
                         </li>
                     </ul>
@@ -64,7 +69,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2021 - NewsConcentratorSystem - <a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
+            &copy; A <a href="http://telegram.me/SadraDsk">Sadra Dorostkar</a> Production
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

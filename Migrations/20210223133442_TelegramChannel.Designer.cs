@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NewsConcentratorSystem.Models;
 
 namespace NewsConcentratorSystem.Migrations
 {
     [DbContext(typeof(NewsConcentratorDbContext))]
-    partial class NewsConcentratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210223133442_TelegramChannel")]
+    partial class TelegramChannel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,23 +94,6 @@ namespace NewsConcentratorSystem.Migrations
                     b.HasKey("ChannelId");
 
                     b.ToTable("Channels");
-                });
-
-            modelBuilder.Entity("NewsConcentratorSystem.Models.TelegramScraperSettings", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("Deschatid")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Intervalmins")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Setting");
                 });
 
             modelBuilder.Entity("NewsConcentratorSystem.Models.MessageCutAfter", b =>

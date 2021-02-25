@@ -17,21 +17,12 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ChannelId" />
-            <div class="form-group">
-                <label asp-for="IntervalMins" class="control-label"></label>
-                <input asp-for="IntervalMins" class="form-control" />
-                <span asp-validation-for="IntervalMins" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="ذخیره تایم" class="btn btn-primary"/>
-            </div>
         </form>
     </div>
 </div>
 <div class="row mustcon">
     
-    <h3>فیلتر جایگذینی کلمات</h3>
+    <h3>فیلتر جایگزینی کلمات</h3>
 
     <p>
         <a role="button" class="btn btn-primary" style="text-align: left" asp-route-id="@Model.ChannelId" asp-controller="MessageReplaceWords" asp-action="Create">افزودن</a>
@@ -43,7 +34,7 @@
                 کلمه هدف
             </th>
             <th>
-                جایگذین
+                جایگزین
             </th>
             <th></th>
         </tr>
@@ -58,7 +49,7 @@
                     @Html.DisplayFor(modelItem => item.ReplaceTo)
                 </td>
                 <td>
-                    <a role="button" class="btn btn-danger" asp-controller="MessageReplaceWords" asp-action="Delete" asp-route-id="@item.MRWId">حذف</a>
+                    <a role="button" class="btn btn-danger" asp-controller="MessageReplaceWords" asp-action="Delete" asp-route-id="@item.MRWId" asp-route-channelid="@Model.ChannelId">حذف</a>
                 </td>
             </tr>
         }
@@ -92,7 +83,7 @@
                         @Html.DisplayFor(modelItem => item.MustContainWord)
                     </td>
                     <td>
-                        <a role="button" class="btn btn-danger" asp-controller="MessageMustContains" asp-action="Delete" asp-route-id="@item.MMCId">حذف</a>
+                        <a role="button" class="btn btn-danger" asp-controller="MessageMustContains" asp-action="Delete" asp-route-id="@item.MMCId" asp-route-channelid="@Model.ChannelId">حذف</a>
                     </td>
                 </tr>
             }

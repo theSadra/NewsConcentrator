@@ -26,26 +26,12 @@ namespace NewsConcentratorSystem.Controllers
         }
 
         // GET: MessageMustContains/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var messageMustContain = await _context.MessageMustContains
-                .FirstOrDefaultAsync(m => m.MMCId == id);
-            if (messageMustContain == null)
-            {
-                return NotFound();
-            }
-
-            return View(messageMustContain);
-        }
+        
 
         // GET: MessageMustContains/Create
         public IActionResult Create(int id)
         {
+            ViewBag.id = id;
             HttpContext.Session.SetString("id", id.ToString());
             return View();
         }
@@ -121,21 +107,18 @@ namespace NewsConcentratorSystem.Controllers
         }
 
         // GET: MessageMustContains/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int channelid,int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var messageMustContain = await _context.MessageMustContains
-                .FirstOrDefaultAsync(m => m.MMCId == id);
-            if (messageMustContain == null)
-            {
-                return NotFound();
-            }
+            var messageMustContain = await _context.MessageMustContains.FindAsync(id);
+            _context.MessageMustContains.Remove(messageMustContain);
+            await _context.SaveChangesAsync();
 
-            return View(messageMustContain);
+            return RedirectToAction("Edit", "TelegramChannels", new { id = channelid });
         }
 
         // POST: MessageMustContains/Delete/5

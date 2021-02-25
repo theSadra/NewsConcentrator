@@ -17,6 +17,8 @@ namespace NewsConcentratorSystem
 {
     public class Program
     {
+       public static Timer keepconnected_timer = new Timer(30000);
+
         //private static TelegramClient client = null;
         //public static NewsConcentratorDbContext DbContext = new NewsConcentratorDbContext();
 
@@ -35,6 +37,7 @@ namespace NewsConcentratorSystem
         //        //countinue
         //    }
         //}
+        
         public static void Main(string[] args)
         {
 
@@ -99,5 +102,8 @@ namespace NewsConcentratorSystem
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+        
+
     }
+
 }

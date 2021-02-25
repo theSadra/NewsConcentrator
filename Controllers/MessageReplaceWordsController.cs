@@ -65,8 +65,9 @@ namespace NewsConcentratorSystem.Controllers
                  _context.Entry(channel).Collection(c=>c.ReplaceWords).Load();
                 channel.ReplaceWords.Add(messageReplaceWord);
                 await _context.SaveChangesAsync();
+                return RedirectToAction("Edit", "TelegramChannels", new { id = id });
             }
-            return View(messageReplaceWord);
+            return BadRequest();
         }
 
         // GET: MessageReplaceWords/Edit/5
@@ -121,21 +122,18 @@ namespace NewsConcentratorSystem.Controllers
         }
 
         // GET: MessageReplaceWords/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int channelid,int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var messageReplaceWord = await _context.MessageReplaceWords
-                .FirstOrDefaultAsync(m => m.MRWId == id);
-            if (messageReplaceWord == null)
-            {
-                return NotFound();
-            }
+            var messageReplaceWord = await _context.MessageReplaceWords.FindAsync(id);
+            _context.MessageReplaceWords.Remove(messageReplaceWord);
+            await _context.SaveChangesAsync();
 
-            return View(messageReplaceWord);
+           return RedirectToAction("Edit", "TelegramChannels", new { id = channelid });
         }
 
         // POST: MessageReplaceWords/Delete/5

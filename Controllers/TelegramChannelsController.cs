@@ -107,7 +107,6 @@ namespace NewsConcentratorSystem.Controllers
                  var channel =  _context.Channels.Where(c => c.ChannelId == telegramChannel.ChannelId).FirstOrDefault();
 
 
-                  channel.IntervalMins = telegramChannel.IntervalMins;
 
 
                     _context.Update(channel);
