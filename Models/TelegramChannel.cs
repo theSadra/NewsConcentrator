@@ -16,7 +16,7 @@ namespace NewsConcentratorSystem.Models
         public string ChannelUserName { get; set; }
         public string ChannelChatID { get; set; }
 
-
+            
         //Navigation Properties
         [Display(Name = "کلمه های اجباری")]
         public ICollection<MessageMustContain> MustContainWords { get; set; }
