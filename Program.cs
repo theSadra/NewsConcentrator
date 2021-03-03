@@ -21,29 +21,15 @@ namespace NewsConcentratorSystem
 
         private static TelegramClient client = null;
         public static NewsConcentratorDbContext DbContext = new NewsConcentratorDbContext();
+        public static TelegramCollector collector;
 
-        static void OnkeepAlive(Object source, System.Timers.ElapsedEventArgs e)
-        {
-            try
-            {
-                //send message
-                client.SendMessageAsync(new TLInputPeerUser() { UserId = 1585250390 }, "trying to keep alive...");
 
-            }
-            catch
-            {
-                Console.WriteLine("Err in keeping alive opration......");
-                Console.ReadKey();
-                //countinue
-            }
-        }
 
         public static void Main(string[] args)
         {
 
             #region TelegramClientConfiguraition
             Timer keepconnected_timer = new Timer(30000);
-            keepconnected_timer.Elapsed += OnkeepAlive;
 
 
 
@@ -76,7 +62,6 @@ namespace NewsConcentratorSystem
                 }
             }
 
-            OnkeepAlive(null, null);
             keepconnected_timer.Enabled = true;
 
             //var client = new TelegramClient(app_id,api_hash);
@@ -85,10 +70,10 @@ namespace NewsConcentratorSystem
             //var numberphone = Console.ReadLine();
 
             //var hash = await client.SendCodeRequestAsync(numberphone);
-            NewsConcentratorDbContext db = new NewsConcentratorDbContext();
             Console.WriteLine("Is connected: " + client.IsConnected);
             Console.WriteLine("Is user authorized: " + client.IsUserAuthorized());
-            TelegramCollector collector = new TelegramCollector(client,db);
+
+             collector = new TelegramCollector();
             // Console.Write("Enter Verifacation code:");
 
 

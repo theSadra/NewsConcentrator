@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NewsConcentratorSystem.Models;
 using NewsConcentratorSystem.Models;
+using NewsConcentratorSystem.NewsScraper;
 
 namespace NewsConcentratorSystem.Controllers
 {
@@ -62,6 +64,12 @@ namespace NewsConcentratorSystem.Controllers
             {
                 _context.Add(telegramChannel);
                 await _context.SaveChangesAsync();
+                TelegramCollector.mustwait = true;
+                Thread.Sleep(2500);
+                TelegramClientManager.GetTChannelbyUsername(telegramChannel.ChannelUserName);
+                NewsConcentratorSystem.NewsScraper.TelegramClientManager.JoinChannel(telegramChannel.ChannelUserName)
+                    .Wait();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(telegramChannel);
@@ -150,7 +158,7 @@ namespace NewsConcentratorSystem.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var telegramChannel = await _context.Channels.FindAsync(id);
-            _context.Channels.Remove(telegramChannel);
+            _context.Remove(telegramChannel);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

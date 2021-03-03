@@ -32,9 +32,6 @@ namespace NewsConcentratorSystem.NewsScraper
         {
             await CreateClientbyLogIn(appid, apihash);
 
-
-
-
             while (true)
             {
 
@@ -167,15 +164,11 @@ namespace NewsConcentratorSystem.NewsScraper
         }
 
 
-
-
         public static TLChannel GetTChannelbyUsername(string channelUsername)
         {
             var found =  _client.SearchUserAsync(channelUsername).Result;
             return found.Chats.Where(c => c.GetType() == typeof(TLChannel)).Cast<TLChannel>().FirstOrDefault();
         }
-
-
 
         public static async Task<IEnumerable<TLMessage>> GetChannelUnreadmessages(string channelUsername, TLDialogsSlice dialogs)
         {
@@ -226,7 +219,6 @@ namespace NewsConcentratorSystem.NewsScraper
             return null;
         }
 
-
         public static async Task MarkMessagesasRead(TLChannel channel, TLMessage firstmessage)
         {
 
@@ -260,7 +252,6 @@ namespace NewsConcentratorSystem.NewsScraper
         }
 
 
-
         //Downloading actions:
         public static async Task<byte[]> DownloadPhotoFile(TLPhoto photo)
         {
@@ -277,12 +268,6 @@ namespace NewsConcentratorSystem.NewsScraper
                 ,
                 (int)Math.Pow(2, Math.Ceiling(Math.Log(photoSize.Size, 2)))).Result.Bytes;
         }
-
-
-
-
-
-
 
 
         //Sending actions:
