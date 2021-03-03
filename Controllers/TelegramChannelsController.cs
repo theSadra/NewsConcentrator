@@ -62,15 +62,30 @@ namespace NewsConcentratorSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(telegramChannel);
-                await _context.SaveChangesAsync();
-                TelegramCollector.mustwait = true;
-                Thread.Sleep(2500);
-                TelegramClientManager.GetTChannelbyUsername(telegramChannel.ChannelUserName);
-                NewsConcentratorSystem.NewsScraper.TelegramClientManager.JoinChannel(telegramChannel.ChannelUserName)
-                    .Wait();
+                try
+                {
 
-                return RedirectToAction(nameof(Index));
+
+                    
+                    TelegramCollector.mustwait = true;
+                    Thread.Sleep(2500);
+                    var channel = TelegramClientManager.GetTChannelbyUsername(telegramChannel.ChannelUserName);
+                    TelegramCollector.mustwait = true;
+                    Thread.Sleep(2500);
+                    NewsConcentratorSystem.NewsScraper.TelegramClientManager
+                        .JoinChannel(telegramChannel.ChannelUserName)
+                        .Wait();
+                    //Insert Entity in DB
+                    telegramChannel.ChannelChatID = channel.Id.ToString();
+                    _context.Add(telegramChannel);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    return NotFound();
+                }
             }
             return View(telegramChannel);
         }

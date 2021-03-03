@@ -14,7 +14,7 @@ namespace NewsConcentratorSystem.Models
         [Required]
         [Display(Name = "یوزر نیم کانال")]
         public string ChannelUserName { get; set; }
-
+        public string ChannelChatID { get; set; }
 
 
         //Navigation Properties
