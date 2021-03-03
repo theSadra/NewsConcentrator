@@ -64,9 +64,6 @@ namespace NewsConcentratorSystem.Controllers
             {
                 try
                 {
-
-
-                    
                     TelegramCollector.mustwait = true;
                     Thread.Sleep(2500);
                     var channel = TelegramClientManager.GetTChannelbyUsername(telegramChannel.ChannelUserName);
