@@ -17,7 +17,7 @@ namespace NewsConcentratorSystem
 {
     public class Program
     {
-       public static Timer keepconnected_timer = new Timer(30000);
+        public static Timer keepconnected_timer = new Timer(30000);
 
         private static TelegramClient client = null;
         public static NewsConcentratorDbContext DbContext = new NewsConcentratorDbContext();
@@ -32,13 +32,21 @@ namespace NewsConcentratorSystem
             Timer keepconnected_timer = new Timer(30000);
 
 
-
             int app_id = 2372991;
             string api_hash = "c7f27d96d2b3409d0b48d9682a3314a4";
             var store = new FileSessionStore();
 
-            client = new TelegramClient(app_id, api_hash, store);
+            try
+            {
 
+                client = new TelegramClient(app_id, api_hash, store);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Environment.Exit(-1);
+            }
             TelegramClientManager._client = client;
             //await TelegramClientManager.CreateClientbyAuthorize(app_id, api_hash);
             //client = TelegramClientManager._client;
@@ -62,7 +70,7 @@ namespace NewsConcentratorSystem
                 }
             }
 
-            keepconnected_timer.Enabled = true;
+            keepconnected_timer.Enabled = false;
 
             //var client = new TelegramClient(app_id,api_hash);
 
@@ -73,7 +81,7 @@ namespace NewsConcentratorSystem
             Console.WriteLine("Is connected: " + client.IsConnected);
             Console.WriteLine("Is user authorized: " + client.IsUserAuthorized());
 
-             collector = new TelegramCollector();
+            collector = new TelegramCollector();
             // Console.Write("Enter Verifacation code:");
 
 
@@ -89,7 +97,7 @@ namespace NewsConcentratorSystem
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-        
+
 
     }
 

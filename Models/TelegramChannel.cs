@@ -14,8 +14,10 @@ namespace NewsConcentratorSystem.Models
         [Required]
         [Display(Name = "یوزر نیم کانال")]
         public string ChannelUserName { get; set; }
+        [Display(Name = "نام کانال")]
+        public string ChannelTitle { get; set; }
         public string ChannelChatID { get; set; }
-
+        public string AccessHash { get; set; }
             
         //Navigation Properties
         [Display(Name = "کلمه های اجباری")]

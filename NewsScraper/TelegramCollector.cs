@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using NewsConcentratorSystem.Models;
 using NewsConcentratorSystem.NewsScraper;
 using Telegram.Bot;
+using Telegram.Bot.Args;
+using Telegram.Bot.Types;
 using TLSchema;
 using TLSchema.Messages;
 using TLSharp;
+using File = System.IO.File;
 using Timer = System.Timers.Timer;
 
 namespace NewsConcentratorSystem.NewsScraper
@@ -20,16 +25,24 @@ namespace NewsConcentratorSystem.NewsScraper
         public TelegramBotClient bot;
         Timer Collector = new Timer(1000);
         public static bool mustwait = false;
+        public static int mustwaittilme = 0;
+        public static ContentSenderTelegramBot _Bot;
         public static TelegramClient client;
         public NewsConcentratorDbContext _Context;
         Timer keepconnected_timer = new Timer(30000);
+        private void OnTelegramMessage(object sender, MessageEventArgs e)
+        {
+            if (e.Message.Type == Telegram.Bot.Types.Enums.MessageType.Text && e.Message.Text == "/start")
+                bot.SendTextMessageAsync(new ChatId(e.Message.MigrateFromChatId), "Started...").Wait();
+        }
         public TelegramCollector()
         {
             bot = new TelegramBotClient("1614127935:AAEqBC-r7sxG3tcOhWVkjOiiq7_hHAAWR40");
-            keepconnected_timer.Elapsed += OnkeepAlive;
-            
-            
-
+            var me = bot.GetMeAsync().Result;
+            //bot.SendTextMessageAsync(new ChatId(-1001479837640), "Hello word.!");
+            //keepconnected_timer.Elapsed += OnkeepAlive;
+            _Bot = new ContentSenderTelegramBot(bot, "@bogbogbowbow");
+            bot.OnMessage += OnTelegramMessage;
             int app_id = 2372991;
             string api_hash = "c7f27d96d2b3409d0b48d9682a3314a4";
             var store = new FileSessionStore();
@@ -79,96 +92,513 @@ namespace NewsConcentratorSystem.NewsScraper
 
 
 
+
+
         //Collector Unit...
         public async void GetNewses()
         {
             while (true)
             {
+
+                keepconnected_timer.Stop();
+
                 if (mustwait)
                 {
-                    Thread.Sleep(7500);
                     mustwait = false;
+                    Thread.Sleep(mustwaittilme);
                 }
-                keepconnected_timer.Stop();
-                Thread.Sleep(3000);
-                
-
-                //Program.keepconnected_timer.Stop();
-                var dialogs = (TLDialogsSlice)await client.GetUserDialogsAsync();
-                //Program.keepconnected_timer.Start();
-                keepconnected_timer.Start();
-
-                var channels = _Context.Channels.ToList();
-
-
-
-                foreach (var channel in channels)
+                if (!mustwait)
                 {
-                    var messages = TelegramClientManager.GetChannelUnreadmessages(channel.ChannelUserName, dialogs)
-                        .Result;
-
-                    if (messages == null)
-                        continue;
-
-                    var photomessages = messages.Where(m => m.Media != null && m.Media is TLMessageMediaPhoto)
-                        .Select(m => m.Media).OfType<TLMessageMediaPhoto>();
-                    var textmessages = messages
-                        .Where(m => m.Media == null) /*.Where("")* for ensure message in not forwarded*/
-                        .Select(m => m.Message);
-
-
-                    #region MustCuntainFiltering
-
-
-
-                    //MustContainFilter
-                    _Context.Entry(channel).Collection(channel => channel.MustContainWords).Load();
-
-
-                    if (channel.MustContainWords.Count > 0)
+                    Thread.Sleep(10000);
+                    //Program.keepconnected_timer.Stop();
+                    var dialogs = new TLDialogsSlice();
+                    try
                     {
-                        List<string> filtered_textmessages = new List<string>();
-                        foreach (var textmmesage in textmessages)
+                        if (mustwait)
                         {
-                            foreach (var word in channel.MustContainWords)
-                            {
-                                if (textmmesage.Contains(word.MustContainWord))
-                                {
-                                    filtered_textmessages.Add(textmmesage);
-                                    break;
-                                }
-                            }
+                            continue;
+                        }
+                        //Geting dialogs from Telegram Servers
+                        dialogs = (TLDialogsSlice)await client.GetUserDialogsAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        continue;
+                    }
+                    //Program.keepconnected_timer.Start();
+                    keepconnected_timer.Start();
+
+                    var channels = _Context.Channels.ToList();
+
+
+
+                    foreach (var channel in channels)
+                    {
+                        IEnumerable<TLMessage> messages = null;
+                        try
+                        {
+
+                            messages = TelegramClientManager.GetChannelUnreadmessages(channel.ChannelUserName, dialogs)
+                                .Result;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            continue;
                         }
 
-                        textmessages = filtered_textmessages.Distinct().ToList();
+                        if (messages == null)
+                            continue;
 
-                        List<TLMessageMediaPhoto> filtered_photomessages = new List<TLMessageMediaPhoto>();
-                        foreach (var photomessage in photomessages)
+                        var photomessages = messages.Where(m => m.Media != null && m.Media is TLMessageMediaPhoto)
+                            .Select(m => m.Media).OfType<TLMessageMediaPhoto>();
+                        var textmessages = messages
+                            .Where(m => m.Media == null) /*.Where("")* for ensure message in not forwarded*/
+                            .Select(m => m.Message).ToList();
+
+
+                        messages = null;
+
+                        //Filters
+
+                        _Context.Entry(channel).Collection(channel => channel.MustContainWords).Load();
+
+                        #region MustCuntainFiltering
+
+                        if (channel.MustContainWords.Count > 0)
                         {
-                            //var photoMedia = (TLMessageMediaPhoto)photomessage.Media;
-                            foreach (var word in channel.MustContainWords)
+
+                            List<string> filtered_textmessages = new List<string>();
+                            foreach (var textmmesage in textmessages)
                             {
-                                if (photomessage.Caption.Contains(word.MustContainWord))
+                                foreach (var word in channel.MustContainWords)
                                 {
-                                    filtered_photomessages.Add(photomessage);
-                                    break;
+                                    if (textmmesage.Contains(word.MustContainWord))
+                                    {
+                                        filtered_textmessages.Add(textmmesage);
+                                        break;
+                                    }
                                 }
                             }
+
+                            textmessages = filtered_textmessages.Distinct().ToList();
+
+                            List<TLMessageMediaPhoto> filtered_photomessages = new List<TLMessageMediaPhoto>();
+                            foreach (var photomessage in photomessages)
+                            {
+                                //var photoMedia = (TLMessageMediaPhoto)photomessage.Media;
+                                foreach (var word in channel.MustContainWords)
+                                {
+                                    if (photomessage.Caption.Contains(word.MustContainWord))
+                                    {
+                                        filtered_photomessages.Add(photomessage);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            photomessages = filtered_photomessages.Distinct().ToList();
+
                         }
 
-                        photomessages = filtered_photomessages.Distinct().ToList();
+                        #endregion
 
 
 
+                        #region Removing Link&Tag on photos
+
+
+
+
+
+
+                        foreach (var photo in photomessages)
+                        {
+
+
+                            var splitedwordlist = photo.Caption.Split(' ').ToList();
+
+                            for (int i = 0; i < splitedwordlist.Count; i++)
+                            {
+                                //removing instagram taglinks
+                                if (splitedwordlist[i].Contains("@"))
+                                {
+
+                                    if (splitedwordlist[i].Contains("\n"))
+                                    {
+                                        var linksplitedwordlist = splitedwordlist[i].Split('\n').ToList();
+                                        splitedwordlist[i] = null;
+                                        foreach (var li in linksplitedwordlist.ToList())
+                                        {
+                                            if (li.Contains("@") || li == "")
+                                            {
+                                                linksplitedwordlist.Remove(li);
+                                            }
+                                        }
+
+                                        string filteredword = null;
+                                        foreach (var li in linksplitedwordlist)
+                                        {
+                                            filteredword += li + " ";
+                                        }
+
+                                        if (filteredword == null)
+                                        {
+                                            splitedwordlist.Remove(splitedwordlist[i]);
+                                            continue;
+                                        }
+                                        splitedwordlist[i] = filteredword;
+                                    }
+                                    else
+                                    {
+                                        splitedwordlist.Remove(splitedwordlist[i]);
+                                    }
+
+                                }
+
+                                if (!(i < splitedwordlist.Count))
+                                {
+                                    break;
+                                }
+                                if (splitedwordlist[i].Contains("://") || splitedwordlist[i].Contains(".com") || splitedwordlist[i].Contains(".ir") || splitedwordlist[i].Contains(".org") || splitedwordlist[i].Contains(".net"))
+                                {
+
+                                    if (splitedwordlist[i].Contains("\n"))
+                                    {
+                                        var linksplitedwordlist = splitedwordlist[i].Split('\n').ToList();
+                                        splitedwordlist[i] = null;
+                                        foreach (var li in linksplitedwordlist.ToList())
+                                        {
+                                            if (li.Contains("://") || li.Contains(".me") || li.Contains(".ir") || li.Contains(".com") || li.Contains(".org") || li.Contains(".net") || li == "")
+                                            {
+                                                linksplitedwordlist.Remove(li);
+                                            }
+                                        }
+
+                                        string filteredword = null;
+                                        foreach (var li in linksplitedwordlist)
+                                        {
+                                            filteredword += li + " ";
+                                        }
+                                        if (filteredword == null)
+                                        {
+                                            splitedwordlist.Remove(splitedwordlist[i]);
+                                            continue;
+                                        }
+                                        splitedwordlist[i] = filteredword;
+
+                                    }
+                                    else
+                                    {
+                                        var linksplitedwordlist = splitedwordlist[i].Split(' ').ToList();
+                                        splitedwordlist[i] = null;
+                                        foreach (var li in linksplitedwordlist.ToList())
+                                        {
+                                            if (li.Contains("://") || li.Contains(".me") || li.Contains(".ir"))
+                                            {
+                                                linksplitedwordlist.Remove(li);
+                                            }
+                                        }
+
+                                        string filteredword = null;
+                                        foreach (var li in linksplitedwordlist)
+                                        {
+                                            filteredword += li + " ";
+                                        }
+
+                                        splitedwordlist[i] = filteredword;
+                                    }
+
+                                }
+                                if (splitedwordlist[i].Contains("www."))
+                                {
+
+                                    if (splitedwordlist[i].Contains("\n"))
+                                    {
+                                        var linksplitedwordlist = splitedwordlist[i].Split('\n').ToList();
+                                        splitedwordlist[i] = null;
+                                        foreach (var li in linksplitedwordlist.ToList())
+                                        {
+                                            if (li.Contains("www."))
+                                            {
+                                                linksplitedwordlist.Remove(li);
+                                            }
+                                        }
+
+                                        foreach (var li in linksplitedwordlist)
+                                        {
+                                            splitedwordlist[i] += li + " ";
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        splitedwordlist.Remove(splitedwordlist[i]);
+                                    }
+
+                                }
+                            }
+
+                            string filteredcaption = null;
+                            foreach (var split in splitedwordlist.ToList())
+                            {
+                                filteredcaption += split + " ";
+                            }
+
+
+                            photo.Caption = filteredcaption;
+
+                        }
+
+                        #endregion
+
+
+
+                        #region Removing Link&Tag on textMessages
+
+
+                        for (int j = 0; j < textmessages.Count; j++)
+                        {
+
+
+                            var splitedwordlist = textmessages[j].Split(' ').ToList();
+
+                            for (int i = 0; i < splitedwordlist.Count; i++)
+                            {
+                                //removing instagram taglinks
+                                if (splitedwordlist[i].Contains("@"))
+                                {
+
+                                    if (splitedwordlist[i].Contains("\n"))
+                                    {
+                                        var linksplitedwordlist = splitedwordlist[i].Split('\n').ToList();
+                                        splitedwordlist[i] = null;
+                                        foreach (var li in linksplitedwordlist.ToList())
+                                        {
+                                            if (li.Contains("@") || li == "")
+                                            {
+                                                linksplitedwordlist.Remove(li);
+                                            }
+                                        }
+
+                                        string filteredword = null;
+                                        foreach (var li in linksplitedwordlist)
+                                        {
+                                            filteredword += li + " ";
+                                        }
+
+                                        if (filteredword == null)
+                                        {
+                                            splitedwordlist.Remove(splitedwordlist[i]);
+                                            continue;
+                                        }
+                                        splitedwordlist[i] = filteredword;
+                                    }
+                                    else
+                                    {
+                                        splitedwordlist.Remove(splitedwordlist[i]);
+                                    }
+
+                                }
+
+                                if (splitedwordlist[i].Contains("://") || splitedwordlist[i].Contains(".com") || splitedwordlist[i].Contains(".ir") || splitedwordlist[i].Contains(".org") || splitedwordlist[i].Contains(".net"))
+                                {
+
+                                    if (splitedwordlist[i].Contains("\n"))
+                                    {
+                                        var linksplitedwordlist = splitedwordlist[i].Split('\n').ToList();
+                                        splitedwordlist[i] = null;
+                                        foreach (var li in linksplitedwordlist.ToList())
+                                        {
+                                            if (li.Contains("://") || li.Contains(".me") || li.Contains(".ir") || li.Contains(".com") || li.Contains(".org") || li.Contains(".net") || li == "")
+                                            {
+                                                linksplitedwordlist.Remove(li);
+                                            }
+                                        }
+
+                                        string filteredword = null;
+                                        foreach (var li in linksplitedwordlist)
+                                        {
+                                            filteredword += li + " ";
+                                        }
+                                        if (filteredword == null)
+                                        {
+                                            splitedwordlist.Remove(splitedwordlist[i]);
+                                            continue;
+                                        }
+                                        splitedwordlist[i] = filteredword;
+
+                                    }
+                                    else
+                                    {
+                                        var linksplitedwordlist = splitedwordlist[i].Split(' ').ToList();
+                                        splitedwordlist[i] = null;
+                                        foreach (var li in linksplitedwordlist.ToList())
+                                        {
+                                            if (li.Contains("://") || li.Contains(".me") || li.Contains(".ir") || li == "")
+                                            {
+                                                linksplitedwordlist.Remove(li);
+                                            }
+                                        }
+
+                                        string filteredword = null;
+                                        foreach (var li in linksplitedwordlist)
+                                        {
+                                            filteredword += li + " ";
+                                        }
+
+                                        splitedwordlist[i] = filteredword;
+                                    }
+
+                                }
+                                if (splitedwordlist[i].Contains("www."))
+                                {
+
+                                    if (splitedwordlist[i].Contains("\n"))
+                                    {
+                                        var linksplitedwordlist = splitedwordlist[i].Split('\n').ToList();
+                                        splitedwordlist[i] = null;
+                                        foreach (var li in linksplitedwordlist.ToList())
+                                        {
+                                            if (li.Contains("www."))
+                                            {
+                                                linksplitedwordlist.Remove(li);
+                                            }
+                                        }
+
+                                        foreach (var li in linksplitedwordlist)
+                                        {
+                                            splitedwordlist[i] += li + " ";
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        splitedwordlist.Remove(splitedwordlist[i]);
+                                    }
+
+                                }
+                            }
+
+                            string filteredcaption = null;
+                            foreach (var split in splitedwordlist.ToList())
+                            {
+                                filteredcaption += split + " ";
+                            }
+
+
+                            textmessages[j] = filteredcaption;
+
+                        }
+
+
+                        #endregion
+
+
+                        _Context.Entry(channel).Collection(channel => channel.ReplaceWords).Load();
+
+
+                        #region WordReplacement Filter on photos
+                        foreach (var photo in photomessages)
+                        {
+                            var splitedwordlist = photo.Caption.Split(' ').ToList();
+                            for (int i = 0; i < splitedwordlist.Count; i++)
+                            {
+                                foreach (var replaceWord in channel.ReplaceWords)
+                                {
+                                    if (splitedwordlist[i] == replaceWord.Word)
+                                    {
+                                        splitedwordlist[i] = replaceWord.ReplaceTo;
+                                    }
+                                }
+                            }
+                            string filteredcaption = null;
+                            foreach (var split in splitedwordlist.ToList())
+                            {
+                                filteredcaption += split + " ";
+                            }
+
+
+                            photo.Caption = filteredcaption;
+                        }
+
+
+                        #endregion
+
+
+                        #region WordReplacement Filter on textMessages
+
+                        for (int j = 0; j < textmessages.Count; j++)
+                        {
+                            var splitedwordlist = textmessages[j].Split(' ').ToList();
+                            for (int i = 0; i < splitedwordlist.Count; i++)
+                            {
+                                foreach (var replaceWord in channel.ReplaceWords)
+                                {
+                                    if (splitedwordlist[i] == replaceWord.Word)
+                                    {
+                                        splitedwordlist[i] = replaceWord.ReplaceTo;
+                                    }
+                                }
+                            }
+                            string filteredcaption = null;
+                            foreach (var split in splitedwordlist.ToList())
+                            {
+                                filteredcaption += split + " ";
+                            }
+
+
+                            textmessages[j] = filteredcaption;
+                        }
+
+                        #endregion
+
+
+
+                        #region Sending Text Messages to the Destination
+
+                        //for test
+
+                        foreach (var message in textmessages)
+                        {
+                            _Bot.SendTextMessage(message + "\n\n" + "@bogbogbowbow");
+                            Thread.Sleep(2560);
+                        }
+
+
+                        #endregion
+
+
+
+                        #region Sending Photo Messages to the Destination
+
+                        foreach (var photo in photomessages)
+                        {
+                            byte[] media = null;
+                            try
+                            {
+                                //Downloading media content
+                                media = TelegramClientManager.DownloadPhotoFile((TLPhoto)photo.Photo).Result;
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                                Thread.Sleep(10000);
+                                continue;
+                            }
+                            Thread.Sleep(250);
+                            var mediafilestream = new MemoryStream(media);
+
+                            _Bot.SendPhotoMessage(mediafilestream, photo.Caption + "\n\n" + "@bogbogbowbow");
+                            Thread.Sleep(6000);
+                        }
+
+                        #endregion
 
                     }
 
-                    #endregion
-
-
-
                 }
-
 
             }
         }

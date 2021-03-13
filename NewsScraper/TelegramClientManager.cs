@@ -134,9 +134,6 @@ namespace NewsConcentratorSystem.NewsScraper
 
         
 
-
-
-
         public static async Task<bool> JoinChannel(string channelusername)
         {
             //finding channel
@@ -191,28 +188,24 @@ namespace NewsConcentratorSystem.NewsScraper
 
 
                     TLChannelMessages hist =
-                        (TLChannelMessages)_client.GetHistoryAsync(target, 0, -1, 0).Result;
+                        (TLChannelMessages)_client.GetHistoryAsync(target, 0, 0, 0).Result;
 
 
-                    //int takecount = 100;
-                    //if (!(dialog.UnreadCount >= 100))
-                    //{
-                    //    takecount = dialog.UnreadCount;
-                    //}
+                    int takecount = 25;
+                    if (dialog.UnreadCount <25)
+                    {
+                        takecount = dialog.UnreadCount;
+                    }
 
                     var hists = hist.Messages.OfType<TLMessage>().ToList();
                     unreadMessages = hist.Messages
-                    .Take(dialog.UnreadCount).OfType<TLMessage>();
+                    .Take(takecount).OfType<TLMessage>();
 
-                    var lists = unreadMessages.ToList();
 
                     //MarkMessage as unread
                     MarkMessagesasRead(channel, unreadMessages.ToList()[0]).Wait();
                     return unreadMessages;
                 }
-
-               
-
 
             }
 

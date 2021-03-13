@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NewsConcentratorSystem.Models;
 
 namespace NewsConcentratorSystem.Migrations
 {
     [DbContext(typeof(NewsConcentratorDbContext))]
-    partial class NewsConcentratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210305062225_Adding-ChannelTitle_to_TelegramChannelEntity1")]
+    partial class AddingChannelTitle_to_TelegramChannelEntity1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

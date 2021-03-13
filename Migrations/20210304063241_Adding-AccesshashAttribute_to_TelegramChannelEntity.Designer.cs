@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NewsConcentratorSystem.Models;
 
 namespace NewsConcentratorSystem.Migrations
 {
     [DbContext(typeof(NewsConcentratorDbContext))]
-    partial class NewsConcentratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210304063241_Adding-AccesshashAttribute_to_TelegramChannelEntity")]
+    partial class AddingAccesshashAttribute_to_TelegramChannelEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,13 +87,10 @@ namespace NewsConcentratorSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("AccessHash")
+                    b.Property<string>("Accesshash")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ChannelChatID")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ChannelTitle")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ChannelUserName")

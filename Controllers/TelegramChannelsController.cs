@@ -65,22 +65,26 @@ namespace NewsConcentratorSystem.Controllers
                 try
                 {
                     TelegramCollector.mustwait = true;
-                    Thread.Sleep(2500);
+                    TelegramCollector.mustwaittilme = 15000;
+                    Thread.Sleep(4000);
                     var channel = TelegramClientManager.GetTChannelbyUsername(telegramChannel.ChannelUserName);
-                    TelegramCollector.mustwait = true;
-                    Thread.Sleep(2500);
+                    Thread.Sleep(4500);
                     NewsConcentratorSystem.NewsScraper.TelegramClientManager
                         .JoinChannel(telegramChannel.ChannelUserName)
                         .Wait();
                     //Insert Entity in DB
                     telegramChannel.ChannelChatID = channel.Id.ToString();
+                    telegramChannel.AccessHash = channel.AccessHash.ToString();
+                    telegramChannel.ChannelUserName = channel.Username;
+                    telegramChannel.ChannelTitle = channel.Title;
                     _context.Add(telegramChannel);
                     await _context.SaveChangesAsync();
 
                     return RedirectToAction(nameof(Index));
                 }
-                catch
+                catch (Exception e)
                 {
+                    Console.WriteLine(e);
                     return NotFound();
                 }
             }
@@ -169,9 +173,26 @@ namespace NewsConcentratorSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+
             var telegramChannel = await _context.Channels.FindAsync(id);
+
+
+
+            //Cascade delete
+            _context.Entry(telegramChannel).Collection(c => c.ReplaceWords).Load();
+            _context.Entry(telegramChannel).Collection(c => c.CutAfterWords).Load();
+            _context.Entry(telegramChannel).Collection(c => c.MustContainWords).Load();
+
+
+            if (telegramChannel.ReplaceWords!=null)
+                _context.RemoveRange(telegramChannel.ReplaceWords);
+            if (telegramChannel.MustContainWords != null)
+                _context.RemoveRange(telegramChannel.ReplaceWords);
+            if (telegramChannel.CutAfterWords != null)
+                _context.RemoveRange(telegramChannel.ReplaceWords);
             _context.Remove(telegramChannel);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
