@@ -164,7 +164,7 @@ namespace NewsConcentratorSystem.NewsScraper
         public static TLChannel GetTChannelbyUsername(string channelUsername)
         {
             var found =  _client.SearchUserAsync(channelUsername).Result;
-            return found.Chats.Where(c => c.GetType() == typeof(TLChannel)).Cast<TLChannel>().FirstOrDefault();
+            return found.Chats.Where(c => c.GetType() == typeof(TLChannel)).Cast<TLChannel>().Where(c => c.Username.ToString().ToLower() == channelUsername.ToLower()).FirstOrDefault();
         }
 
         public static async Task<IEnumerable<TLMessage>> GetChannelUnreadmessages(string channelUsername, TLDialogsSlice dialogs)

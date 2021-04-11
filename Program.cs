@@ -31,7 +31,6 @@ namespace NewsConcentratorSystem
             #region TelegramClientConfiguraition
             Timer keepconnected_timer = new Timer(30000);
 
-
             int app_id = 2372991;
             string api_hash = "c7f27d96d2b3409d0b48d9682a3314a4";
             var store = new FileSessionStore();

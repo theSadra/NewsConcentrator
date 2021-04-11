@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram;
@@ -25,7 +26,10 @@ namespace NewsConcentratorSystem.NewsScraper
         {
             try
             {
-                _BotClient.SendTextMessageAsync(new ChatId(-1001479837640), messagetext).Wait();
+                _BotClient.SendTextMessageAsync(new ChatId(-1001266511682), messagetext + "\n\n" + "@Khabardun1").Wait();
+                Thread.Sleep(1250);
+                _BotClient.SendTextMessageAsync(new ChatId(-1001230277569), messagetext + "\n\n" + "@AFLAKIUN1").Wait();
+
             }
             catch (Exception e)
             {
@@ -37,7 +41,9 @@ namespace NewsConcentratorSystem.NewsScraper
         {
             try
             {
-                _BotClient.SendPhotoAsync(new ChatId(-1001479837640), new InputOnlineFile(fileStream), caption).Wait();
+                _BotClient.SendPhotoAsync(new ChatId(-1001266511682), new InputOnlineFile(fileStream), caption + "\n\n" + "@Khabardun1").Wait();
+                Thread.Sleep(1250);
+                _BotClient.SendPhotoAsync(new ChatId(-1001230277569), new InputOnlineFile(fileStream), caption + "\n\n" + "@AFLAKIUN1").Wait();
             }
             catch (Exception e)
             {

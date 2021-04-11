@@ -32,12 +32,13 @@ namespace NewsConcentratorSystem.NewsScraper
         Timer keepconnected_timer = new Timer(30000);
         private void OnTelegramMessage(object sender, MessageEventArgs e)
         {
-            if (e.Message.Type == Telegram.Bot.Types.Enums.MessageType.Text && e.Message.Text == "/start")
-                bot.SendTextMessageAsync(new ChatId(e.Message.MigrateFromChatId), "Started...").Wait();
+            //if (e.Message.Type == Telegram.Bot.Types.Enums.MessageType.Text && e.Message.Text == "/start")
+            //    bot.SendTextMessageAsync(new ChatId(e.Message.MigrateFromChatId), "Started...").Wait();
         }
         public TelegramCollector()
         {
             bot = new TelegramBotClient("1614127935:AAEqBC-r7sxG3tcOhWVkjOiiq7_hHAAWR40");
+            //bot.SendTextMessageAsync(new ChatId(-1001266511682), "Just setting khbrdnn.");
             var me = bot.GetMeAsync().Result;
             //bot.SendTextMessageAsync(new ChatId(-1001479837640), "Hello word.!");
             //keepconnected_timer.Elapsed += OnkeepAlive;
@@ -402,6 +403,10 @@ namespace NewsConcentratorSystem.NewsScraper
 
                                 }
 
+                                if (i >= splitedwordlist.Count)
+                                {
+                                    i--;
+                                }
                                 if (splitedwordlist[i].Contains("://") || splitedwordlist[i].Contains(".com") || splitedwordlist[i].Contains(".ir") || splitedwordlist[i].Contains(".org") || splitedwordlist[i].Contains(".net"))
                                 {
 
@@ -452,6 +457,7 @@ namespace NewsConcentratorSystem.NewsScraper
                                     }
 
                                 }
+
                                 if (splitedwordlist[i].Contains("www."))
                                 {
 
@@ -562,7 +568,7 @@ namespace NewsConcentratorSystem.NewsScraper
 
                         foreach (var message in textmessages)
                         {
-                            _Bot.SendTextMessage(message + "\n\n" + "@bogbogbowbow");
+                            _Bot.SendTextMessage(message);
                             Thread.Sleep(2560);
                         }
 
@@ -590,7 +596,7 @@ namespace NewsConcentratorSystem.NewsScraper
                             Thread.Sleep(250);
                             var mediafilestream = new MemoryStream(media);
 
-                            _Bot.SendPhotoMessage(mediafilestream, photo.Caption + "\n\n" + "@bogbogbowbow");
+                            _Bot.SendPhotoMessage(mediafilestream, photo.Caption );
                             Thread.Sleep(6000);
                         }
 

@@ -68,6 +68,10 @@ namespace NewsConcentratorSystem.Controllers
                     TelegramCollector.mustwaittilme = 15000;
                     Thread.Sleep(4000);
                     var channel = TelegramClientManager.GetTChannelbyUsername(telegramChannel.ChannelUserName);
+                    if (channel == null)
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
                     Thread.Sleep(4500);
                     NewsConcentratorSystem.NewsScraper.TelegramClientManager
                         .JoinChannel(telegramChannel.ChannelUserName)
