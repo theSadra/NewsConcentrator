@@ -154,7 +154,7 @@ namespace NewsConcentratorSystem.NewsScraper
                             continue;
 
                         var photomessages = messages.Where(m => m.Media != null && m.Media is TLMessageMediaPhoto)
-                            .Select(m => m.Media).OfType<TLMessageMediaPhoto>();
+                            .Select(m => m.Media).OfType<TLMessageMediaPhoto>().ToList();
                         var textmessages = messages
                             .Where(m => m.Media == null) /*.Where("")* for ensure message in not forwarded*/
                             .Select(m => m.Message).ToList();
@@ -205,6 +205,40 @@ namespace NewsConcentratorSystem.NewsScraper
                         }
 
                         #endregion
+
+                        #region MustNotContainFilter
+
+                        foreach (var textmessage in textmessages)
+                        {
+
+                            foreach (var mustnotcontain in channel.MustnotContainFilters)
+                            {
+                                if (textmessage.Contains(mustnotcontain.MustnotContainWord))
+                                {
+                                    textmessages.Remove(textmessage);
+                                }
+                            }
+
+
+                        }
+
+                        foreach (var photomessage in photomessages)
+                        {
+
+                            foreach (var mustnotcontain in channel.MustnotContainFilters)
+                            {
+                                if (photomessage.Caption.Contains(mustnotcontain.MustnotContainWord))
+                                {
+                                    photomessages.Remove(photomessage);
+                                }
+                            }
+
+
+                        }
+                        #endregion
+
+
+
 
 
 

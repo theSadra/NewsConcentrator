@@ -64,32 +64,65 @@
 <div class="row mustcon">
     <h3>فیلتر کلمه</h3>
     <b>
-    <a role="button" class="btn btn-primary" style="text-align: left" asp-route-id="@Model.ChannelId" asp-controller="MessageMustContains" asp-action="Create">افزودن</a>
+        <a role="button" class="btn btn-primary" style="text-align: left" asp-route-id="@Model.ChannelId" asp-controller="MessageMustContains" asp-action="Create">افزودن</a>
     </b>
     <table class="table">
         <thead class="thead-dark">
-            <tr>
-                <th>
-                    کلمه اجباری پیام
-                </th>
-                <th></th>
-            </tr>
+        <tr>
+            <th>
+                کلمه اجباری پیام
+            </th>
+            <th></th>
+        </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.MustContainWords)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MustContainWord)
-                    </td>
-                    <td>
-                        <a role="button" class="btn btn-danger" asp-controller="MessageMustContains" asp-action="Delete" asp-route-id="@item.MMCId" asp-route-channelid="@Model.ChannelId">حذف</a>
-                    </td>
-                </tr>
-            }
+        @foreach (var item in Model.MustContainWords)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MustContainWord)
+                </td>
+                <td>
+                    <a role="button" class="btn btn-danger" asp-controller="MessageMustContains" asp-action="Delete" asp-route-id="@item.MMCId" asp-route-channelid="@Model.ChannelId">حذف</a>
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
 
+</div>
+<hr />
+<br/>
+
+
+<div class="row mustcon">
+<h3>فیلتر حذف خبر</h3>
+<b>
+    <a role="button" class="btn btn-primary" style="text-align: left" asp-route-id="@Model.ChannelId" asp-controller="MustnotContain" asp-action="Create">افزودن</a>
+</b>
+<table class="table">
+    <thead class="thead-dark">
+    <tr>
+        <th>
+            کلمه‌ی ممنوع
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.MustnotContainFilters)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MustnotContainWord)
+            </td>
+            <td>
+                <a role="button" class="btn btn-danger" asp-controller="MustnotContain" asp-action="Delete" asp-route-id="@item.MMCId" asp-route-channelid="@Model.ChannelId">حذف</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
 </div>
 
     @section Scripts {

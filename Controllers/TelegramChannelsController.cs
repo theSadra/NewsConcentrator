@@ -24,8 +24,6 @@ namespace NewsConcentratorSystem.Controllers
         // GET: TelegramChannels
         public async Task<IActionResult> Index()
         {
-
-
             return View(await _context.Channels.ToListAsync());
         }
 
@@ -106,7 +104,7 @@ namespace NewsConcentratorSystem.Controllers
             var telegramChannel = await _context.Channels.FindAsync(id);
             _context.Entry(telegramChannel).Collection(c => c.ReplaceWords).Load();
             _context.Entry(telegramChannel).Collection(c => c.MustContainWords).Load();
-            _context.Entry(telegramChannel).Collection(c => c.CutAfterWords).Load();
+            _context.Entry(telegramChannel).Collection(c => c.MustnotContainFilters).Load();
 
             if (telegramChannel == null)
             {
@@ -184,16 +182,17 @@ namespace NewsConcentratorSystem.Controllers
 
             //Cascade delete
             _context.Entry(telegramChannel).Collection(c => c.ReplaceWords).Load();
-            _context.Entry(telegramChannel).Collection(c => c.CutAfterWords).Load();
             _context.Entry(telegramChannel).Collection(c => c.MustContainWords).Load();
+            _context.Entry(telegramChannel).Collection(c => c.MustnotContainFilters).Load();
+
 
 
             if (telegramChannel.ReplaceWords!=null)
                 _context.RemoveRange(telegramChannel.ReplaceWords);
             if (telegramChannel.MustContainWords != null)
-                _context.RemoveRange(telegramChannel.ReplaceWords);
-            if (telegramChannel.CutAfterWords != null)
-                _context.RemoveRange(telegramChannel.ReplaceWords);
+                _context.RemoveRange(telegramChannel.MustContainWords);
+            if (telegramChannel.MustnotContainFilters != null)
+                _context.RemoveRange(telegramChannel.MustnotContainFilters);
             _context.Remove(telegramChannel);
             await _context.SaveChangesAsync();
 

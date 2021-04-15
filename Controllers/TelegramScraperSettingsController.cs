@@ -30,12 +30,12 @@ namespace NewsConcentratorSystem.Controllers
         // GET: TelegramScraperSettings/Edit/5
         public async Task<IActionResult> Edit()
         {
-            var telegramScraperSettings = await _context.Setting.FirstOrDefaultAsync();
-            if (telegramScraperSettings == null)
-            {
-                return NotFound();
-            }
-            return View(telegramScraperSettings);
+            //var telegramScraperSettings = await _context.Setting.FirstOrDefaultAsync();
+            //if (telegramScraperSettings == null)
+            //{
+            //    return NotFound();
+            //}
+            return View();
         }
 
         // POST: TelegramScraperSettings/Edit/5

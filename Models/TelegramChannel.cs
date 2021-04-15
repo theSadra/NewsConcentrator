@@ -24,8 +24,8 @@ namespace NewsConcentratorSystem.Models
         public ICollection<MessageMustContain> MustContainWords { get; set; }
         [Display(Name = "کلمه های جایگذین شونده")]
         public ICollection<MessageReplaceWord> ReplaceWords { get; set; }
-        [Display(Name = "کلمه های تمام کننده پیام")]
-        public ICollection<MessageCutAfter> CutAfterWords { get; set; }
+        [Display(Name = "حذف خبر در صورت حاوی بودن کلمه")]
+        public ICollection<MessageMustnotContainFilter> MustnotContainFilters { get; set; }
 
     }
 }

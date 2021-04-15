@@ -22,6 +22,7 @@ namespace NewsConcentratorSystem.Models
         public DbSet<TelegramChannel> Channels { set; get; }
         public DbSet<MessageMustContain> MessageMustContains { get; set; }
         public DbSet<MessageReplaceWord> MessageReplaceWords { get; set; }
+        public DbSet<MessageMustnotContainFilter> MessageMustnotContain { get; set; }
         public DbSet<MessageCutAfter> MessageCutAfters { get; set; }
         public DbSet<Settings> Settings { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

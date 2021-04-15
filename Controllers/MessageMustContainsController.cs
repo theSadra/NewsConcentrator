@@ -114,8 +114,8 @@ namespace NewsConcentratorSystem.Controllers
                 return NotFound();
             }
 
-            var messageMustContain = await _context.MessageMustContains.FindAsync(id);
-            _context.MessageMustContains.Remove(messageMustContain);
+            var messageMustnotContain = await _context.MessageMustnotContain.FindAsync(id);
+            _context.MessageMustnotContain.Remove(messageMustnotContain);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Edit", "TelegramChannels", new { id = channelid });
