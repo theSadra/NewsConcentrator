@@ -1,0 +1,41 @@
+﻿@model NewsConcentratorSystem.Models.Settings
+
+@{
+    ViewData["Title"] = "Index";
+}
+<h1 style="text-align: center !important;">تـنظـیمات</h1>
+<br/>
+<br />
+<h2 style="text-align: right !important;">الصاق متن</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Index" dir="rtl">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="StartDescription" class="control-label"></label>
+                <input asp-for="StartDescription" class="form-control" />
+                <span asp-validation-for="StartDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDescription" class="control-label"></label>
+                <input asp-for="EndDescription" class="form-control" />
+                <span asp-validation-for="EndDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="text-align: end !important;">
+                <input type="submit" value="ذخیره" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+    <a asp-controller="Home" asp-action="Index">بازگشت</a>
+<style>
+    .form-group {
+        text-align: start;
+    }
+</style>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

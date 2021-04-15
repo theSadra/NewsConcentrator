@@ -98,9 +98,10 @@ namespace NewsConcentratorSystem.NewsScraper
         //Collector Unit...
         public async void GetNewses()
         {
+            Settings settings;
             while (true)
             {
-
+                settings = _Context.Settings.FirstOrDefault();
                 keepconnected_timer.Stop();
 
                 if (mustwait)
@@ -568,7 +569,7 @@ namespace NewsConcentratorSystem.NewsScraper
 
                         foreach (var message in textmessages)
                         {
-                            _Bot.SendTextMessage(message);
+                            _Bot.SendTextMessage(settings.StartDescription+"\n"+message+"\n"+settings.EndDescription);
                             Thread.Sleep(2560);
                         }
 
@@ -596,7 +597,7 @@ namespace NewsConcentratorSystem.NewsScraper
                             Thread.Sleep(250);
                             var mediafilestream = new MemoryStream(media);
 
-                            _Bot.SendPhotoMessage(mediafilestream, photo.Caption );
+                            _Bot.SendPhotoMessage(mediafilestream, settings.StartDescription+"\n"+photo.Caption +"\n"+settings.EndDescription);
                             Thread.Sleep(6000);
                         }
 

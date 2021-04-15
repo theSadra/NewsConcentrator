@@ -38,7 +38,7 @@ namespace NewsConcentratorSystem
             try
             {
 
-                client = new TelegramClient(app_id, api_hash, store);
+                //client = new TelegramClient(app_id, api_hash, store);
 
             }
             catch (Exception e)
@@ -46,9 +46,9 @@ namespace NewsConcentratorSystem
                 Console.WriteLine(e);
                 Environment.Exit(-1);
             }
-            TelegramClientManager._client = client;
-            //await TelegramClientManager.CreateClientbyAuthorize(app_id, api_hash);
-            //client = TelegramClientManager._client;
+            //TelegramClientManager._client = client;
+            TelegramClientManager.CreateClientbyAuthorize(app_id, api_hash).Wait();
+            client = TelegramClientManager._client;
 
 
             while (true)

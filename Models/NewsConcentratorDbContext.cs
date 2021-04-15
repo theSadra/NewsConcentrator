@@ -19,11 +19,11 @@ namespace NewsConcentratorSystem.Models
         {
             
         }
-        public DbSet<TelegramScraperSettings> Setting { get; set; }
         public DbSet<TelegramChannel> Channels { set; get; }
         public DbSet<MessageMustContain> MessageMustContains { get; set; }
         public DbSet<MessageReplaceWord> MessageReplaceWords { get; set; }
         public DbSet<MessageCutAfter> MessageCutAfters { get; set; }
+        public DbSet<Settings> Settings { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source = newsScraper.db");

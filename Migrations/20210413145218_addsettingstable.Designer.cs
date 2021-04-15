@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NewsConcentratorSystem.Models;
 
 namespace NewsConcentratorSystem.Migrations
 {
     [DbContext(typeof(NewsConcentratorDbContext))]
-    partial class NewsConcentratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210413145218_addsettingstable")]
+    partial class addsettingstable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

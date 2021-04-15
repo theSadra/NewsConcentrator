@@ -11,22 +11,27 @@
 
 <style>
 
-.table td, .table th{
-    vertical-align: inherit ;
-}
-    @@font-face
-    {
-        font-family:'iransans'; 
-        src: url("./fonts/IranSansWeb.woff"); 
+
+
+    .table td, .table th {
+        vertical-align: inherit;
     }
+
+    @@font-face {
+        font-family: 'iransans';
+        src: url("./fonts/IranSansWeb.woff");
+    }
+
     * {
         font-family: 'iransans';
         box-sizing: border-box !important;
     }
-    h1{
+
+    h1 {
         text-align: unset !important;
     }
-    .pb-3{
+
+    .pb-3 {
         margin-top: 45px;
     }
 </style>
@@ -35,23 +40,32 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" dir="rtl">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">سیستم جمع آوری خبر</a>
+                @*<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">سیستم جمع آوری خبر</a>*@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"/>
+                    <span class="navbar-toggler-icon" />
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between" dir="rtl">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-center" dir="rtl">
+                    <div style="width: 500px; background-color: #f2f2f2; border-radius: 5px; ">
+
+                    <ul class="navbar-nav flex-grow-1"style="padding-right: 0px !important; justify-content: space-around;">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">صفحه اصلی</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="TelegramChannels" asp-action="Index">
-                                پنل مدیریت تلگرام
+                            <a style="text-align: center;" class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+                                <h3 class="bi bi-house"></h3> صفحه اصلی
                             </a>
                         </li>
-                        
+                        <li class="nav-item">
+                            <a style="text-align: center" class="nav-link text-dark" asp-area="" asp-controller="TelegramChannels" asp-action="Index">
+                                <h3 class="bi bi-briefcase"></h3> پنل مدیریت
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="text-align: center;" class="nav-link text-dark" asp-area="" asp-controller="Settings" asp-action="Index">
+                                <h3 class="bi bi-gear"></h3> تـنـظـیمات
+                            </a>
+                        </li>
                     </ul>
+                    </div>
                 </div>
             </div>
         </nav>
