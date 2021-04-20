@@ -651,7 +651,7 @@ namespace NewsConcentratorSystem.NewsScraper
                                 try
                                 {
                                     //Downloading media content
-                                    media = TelegramClientManager.DownloadPhotoFile((TLPhoto) photo.Photo).Result;
+                                    media = TelegramClientManager.DownloadPhotoFile((TLPhoto)photo.Photo).Result;
                                 }
                                 catch (Exception e)
                                 {
@@ -662,6 +662,27 @@ namespace NewsConcentratorSystem.NewsScraper
 
                                 Thread.Sleep(250);
                                 var mediafilestream = new MemoryStream(media);
+
+                                //Mark as a published news
+                                IHasher hasher = new SHA256Hasher();
+
+                                var news = new News()
+                                {
+                                    //Todo: Cunjunction word must remove
+                                    TextMessage = photo.Caption,
+
+                                    Mediahash = media != null ? hasher.Getfilehash(media) : null
+
+                                };
+                                    
+                                //Calling marker
+                                MarkasPublished(news);
+                            ;
+
+
+
+
+
 
                                 _Bot.SendPhotoMessage(mediafilestream,
                                     settings.StartDescription + "\n" + photo.Caption + "\n" + settings.EndDescription);
@@ -702,7 +723,11 @@ namespace NewsConcentratorSystem.NewsScraper
                 //countinue
             }
         }
-
-
+        //Save news on PublishedNewses table
+        public void MarkasPublished(News news)
+        {
+            _Context.PublishedNewses.Add(news);
+            _Context.SaveChanges();
+        }
     }
 }

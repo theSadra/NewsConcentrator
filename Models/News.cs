@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using Telegram.Bot.Types;
+using TLSchema;
 
 namespace NewsConcentratorSystem.Models
 {
-    public class PublishedNewses
+    public class News
     {
         [Key]
         public int id { get; set; }
@@ -15,5 +18,15 @@ namespace NewsConcentratorSystem.Models
         public string Mediahash { get; set; }
         [NotNull]
         public string TextMessage { get; set; }
-    }
+
+
+
+
+
+
+      
+
+    } 
+    
+
 }

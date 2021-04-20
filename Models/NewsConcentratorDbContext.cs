@@ -25,7 +25,7 @@ namespace NewsConcentratorSystem.Models
         public DbSet<MessageMustnotContainFilter> MessageMustnotContain { get; set; }
         public DbSet<MessageCutAfter> MessageCutAfters { get; set; }
         public DbSet<Settings> Settings { get; set; }
-        public DbSet<PublishedNewses> PublishedNewses { get; set; }
+        public DbSet<News> PublishedNewses { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source = newsScraper.db");
