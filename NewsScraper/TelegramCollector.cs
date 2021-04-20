@@ -37,7 +37,7 @@ namespace NewsConcentratorSystem.NewsScraper
         }
         public TelegramCollector()
         {
-            bot = new TelegramBotClient("1614127935:AAEqBC-r7sxG3tcOhWVkjOiiq7_hHAAWR40");
+            bot = new TelegramBotClient("1614127935:AAGWfaa6RwOrrUGH2V0AR9phluns7ScvpFk");
             //bot.SendTextMessageAsync(new ChatId(-1001266511682), "Just setting khbrdnn.");
             var me = bot.GetMeAsync().Result;
             //bot.SendTextMessageAsync(new ChatId(-1001479837640), "Hello word.!");
@@ -101,8 +101,6 @@ namespace NewsConcentratorSystem.NewsScraper
             Settings settings;
             while (true)
             {
-                settings = _Context.Settings.FirstOrDefault();
-                keepconnected_timer.Stop();
 
                 if (mustwait)
                 {
@@ -129,7 +127,7 @@ namespace NewsConcentratorSystem.NewsScraper
                         continue;
                     }
                     //Program.keepconnected_timer.Start();
-                    keepconnected_timer.Start();
+                    settings = _Context.Settings.AsNoTracking().FirstOrDefault();
 
                     var channels = _Context.Channels.ToList();
 
