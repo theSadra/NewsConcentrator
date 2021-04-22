@@ -30,6 +30,7 @@ namespace NewsConcentratorSystem.NewsScraper
         public static TelegramClient client;
         public NewsConcentratorDbContext _Context;
         Timer keepconnected_timer = new Timer(30000);
+        IHasher hasher = new SHA256Hasher();
         private void OnTelegramMessage(object sender, MessageEventArgs e)
         {
             //if (e.Message.Type == Telegram.Bot.Types.Enums.MessageType.Text && e.Message.Text == "/start")
@@ -564,6 +565,11 @@ namespace NewsConcentratorSystem.NewsScraper
                             #endregion
 
 
+
+
+
+
+
                             _Context.Entry(channel).Collection(channel => channel.ReplaceWords).Load();
 
 
@@ -626,7 +632,6 @@ namespace NewsConcentratorSystem.NewsScraper
                             #endregion
 
 
-
                             #region Sending Text Messages to the Destination
 
                             //for test
@@ -644,6 +649,7 @@ namespace NewsConcentratorSystem.NewsScraper
 
 
                             #region Sending Photo Messages to the Destination
+                            var publishednewses = _Context.PublishedNewses;
 
                             foreach (var photo in photomessages)
                             {
@@ -660,11 +666,31 @@ namespace NewsConcentratorSystem.NewsScraper
                                     continue;
                                 }
 
+
+                                #region RepetituousNewsFilter
+
+                                //Check if newsPhoto already published & if true, remove that
+                                
+                                var mediaresult =  RepetitiousNewsDetector.IsmediaRepetitious(hasher.Getfilehash(media), publishednewses);
+                                if(mediaresult == true)
+                                    continue;//Avoid sending
+
+
+
+                                #endregion
+
+
+
+
+
+
+
+                    
+
                                 Thread.Sleep(250);
                                 var mediafilestream = new MemoryStream(media);
 
                                 //Mark as a published news
-                                IHasher hasher = new SHA256Hasher();
 
                                 var news = new News()
                                 {
@@ -675,7 +701,7 @@ namespace NewsConcentratorSystem.NewsScraper
 
                                 };
 
-                            //Calling marker
+                                //Calling marker
                                 MarkasPublished(news);
 
 
