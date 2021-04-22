@@ -94,7 +94,7 @@ namespace NewsConcentratorSystem.Migrations
                     b.ToTable("MessageReplaceWords");
                 });
 
-            modelBuilder.Entity("NewsConcentratorSystem.Models.PublishedNewses", b =>
+            modelBuilder.Entity("NewsConcentratorSystem.Models.News", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -108,7 +108,7 @@ namespace NewsConcentratorSystem.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("PublishedNewseses");
+                    b.ToTable("PublishedNewses");
                 });
 
             modelBuilder.Entity("NewsConcentratorSystem.Models.Settings", b =>

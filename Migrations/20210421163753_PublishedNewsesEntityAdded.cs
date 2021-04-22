@@ -2,7 +2,7 @@
 
 namespace NewsConcentratorSystem.Migrations
 {
-    public partial class initmig : Migration
+    public partial class PublishedNewsesEntityAdded : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,9 +13,9 @@ namespace NewsConcentratorSystem.Migrations
                     ChannelId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ChannelUserName = table.Column<string>(type: "TEXT", nullable: false),
-                    HasContainFilter = table.Column<bool>(type: "INTEGER", nullable: false),
-                    IntervalMins = table.Column<int>(type: "INTEGER", nullable: false),
-                    ActivityStatus = table.Column<bool>(type: "INTEGER", nullable: false)
+                    ChannelTitle = table.Column<string>(type: "TEXT", nullable: true),
+                    ChannelChatID = table.Column<string>(type: "TEXT", nullable: true),
+                    AccessHash = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -28,18 +28,39 @@ namespace NewsConcentratorSystem.Migrations
                 {
                     MCAId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    CutAfterWord = table.Column<string>(type: "TEXT", nullable: true),
-                    TelegramChannelChannelId = table.Column<int>(type: "INTEGER", nullable: true)
+                    CutAfterWord = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MessageCutAfters", x => x.MCAId);
-                    table.ForeignKey(
-                        name: "FK_MessageCutAfters_Channels_TelegramChannelChannelId",
-                        column: x => x.TelegramChannelChannelId,
-                        principalTable: "Channels",
-                        principalColumn: "ChannelId",
-                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PublishedNewses",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Mediahash = table.Column<string>(type: "TEXT", nullable: true),
+                    TextMessage = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PublishedNewses", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Settings",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    StartDescription = table.Column<string>(type: "TEXT", nullable: true),
+                    EndDescription = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Settings", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -56,6 +77,26 @@ namespace NewsConcentratorSystem.Migrations
                     table.PrimaryKey("PK_MessageMustContains", x => x.MMCId);
                     table.ForeignKey(
                         name: "FK_MessageMustContains_Channels_TelegramChannelChannelId",
+                        column: x => x.TelegramChannelChannelId,
+                        principalTable: "Channels",
+                        principalColumn: "ChannelId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MessageMustnotContain",
+                columns: table => new
+                {
+                    MMCId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    MustnotContainWord = table.Column<string>(type: "TEXT", nullable: false),
+                    TelegramChannelChannelId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageMustnotContain", x => x.MMCId);
+                    table.ForeignKey(
+                        name: "FK_MessageMustnotContain_Channels_TelegramChannelChannelId",
                         column: x => x.TelegramChannelChannelId,
                         principalTable: "Channels",
                         principalColumn: "ChannelId",
@@ -84,13 +125,13 @@ namespace NewsConcentratorSystem.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_MessageCutAfters_TelegramChannelChannelId",
-                table: "MessageCutAfters",
+                name: "IX_MessageMustContains_TelegramChannelChannelId",
+                table: "MessageMustContains",
                 column: "TelegramChannelChannelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MessageMustContains_TelegramChannelChannelId",
-                table: "MessageMustContains",
+                name: "IX_MessageMustnotContain_TelegramChannelChannelId",
+                table: "MessageMustnotContain",
                 column: "TelegramChannelChannelId");
 
             migrationBuilder.CreateIndex(
@@ -108,7 +149,16 @@ namespace NewsConcentratorSystem.Migrations
                 name: "MessageMustContains");
 
             migrationBuilder.DropTable(
+                name: "MessageMustnotContain");
+
+            migrationBuilder.DropTable(
                 name: "MessageReplaceWords");
+
+            migrationBuilder.DropTable(
+                name: "PublishedNewses");
+
+            migrationBuilder.DropTable(
+                name: "Settings");
 
             migrationBuilder.DropTable(
                 name: "Channels");

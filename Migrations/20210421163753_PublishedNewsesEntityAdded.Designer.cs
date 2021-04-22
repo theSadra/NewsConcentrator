@@ -9,8 +9,8 @@ using NewsConcentratorSystem.Models;
 namespace NewsConcentratorSystem.Migrations
 {
     [DbContext(typeof(NewsConcentratorDbContext))]
-    [Migration("20210303160804_Adding-ChannelchatIDAttribute_to_TelegramChannelEntity")]
-    partial class AddingChannelchatIDAttribute_to_TelegramChannelEntity
+    [Migration("20210421163753_PublishedNewsesEntityAdded")]
+    partial class PublishedNewsesEntityAdded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,12 +27,7 @@ namespace NewsConcentratorSystem.Migrations
                     b.Property<string>("CutAfterWord")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("TelegramChannelChannelId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("MCAId");
-
-                    b.HasIndex("TelegramChannelChannelId");
 
                     b.ToTable("MessageCutAfters");
                 });
@@ -55,6 +50,26 @@ namespace NewsConcentratorSystem.Migrations
                     b.HasIndex("TelegramChannelChannelId");
 
                     b.ToTable("MessageMustContains");
+                });
+
+            modelBuilder.Entity("NewsConcentratorSystem.Models.MessageMustnotContainFilter", b =>
+                {
+                    b.Property<int>("MMCId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("MustnotContainWord")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("TelegramChannelChannelId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("MMCId");
+
+                    b.HasIndex("TelegramChannelChannelId");
+
+                    b.ToTable("MessageMustnotContain");
                 });
 
             modelBuilder.Entity("NewsConcentratorSystem.Models.MessageReplaceWord", b =>
@@ -81,13 +96,53 @@ namespace NewsConcentratorSystem.Migrations
                     b.ToTable("MessageReplaceWords");
                 });
 
+            modelBuilder.Entity("NewsConcentratorSystem.Models.News", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Mediahash")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TextMessage")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("id");
+
+                    b.ToTable("PublishedNewses");
+                });
+
+            modelBuilder.Entity("NewsConcentratorSystem.Models.Settings", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("EndDescription")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StartDescription")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Settings");
+                });
+
             modelBuilder.Entity("NewsConcentratorSystem.Models.TelegramChannel", b =>
                 {
                     b.Property<int>("ChannelId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("AccessHash")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ChannelChatID")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ChannelTitle")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ChannelUserName")
@@ -99,35 +154,17 @@ namespace NewsConcentratorSystem.Migrations
                     b.ToTable("Channels");
                 });
 
-            modelBuilder.Entity("NewsConcentratorSystem.Models.TelegramScraperSettings", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Deschatid")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Intervalmins")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Setting");
-                });
-
-            modelBuilder.Entity("NewsConcentratorSystem.Models.MessageCutAfter", b =>
-                {
-                    b.HasOne("NewsConcentratorSystem.Models.TelegramChannel", null)
-                        .WithMany("CutAfterWords")
-                        .HasForeignKey("TelegramChannelChannelId");
-                });
-
             modelBuilder.Entity("NewsConcentratorSystem.Models.MessageMustContain", b =>
                 {
                     b.HasOne("NewsConcentratorSystem.Models.TelegramChannel", null)
                         .WithMany("MustContainWords")
+                        .HasForeignKey("TelegramChannelChannelId");
+                });
+
+            modelBuilder.Entity("NewsConcentratorSystem.Models.MessageMustnotContainFilter", b =>
+                {
+                    b.HasOne("NewsConcentratorSystem.Models.TelegramChannel", null)
+                        .WithMany("MustnotContainFilters")
                         .HasForeignKey("TelegramChannelChannelId");
                 });
 
@@ -140,9 +177,9 @@ namespace NewsConcentratorSystem.Migrations
 
             modelBuilder.Entity("NewsConcentratorSystem.Models.TelegramChannel", b =>
                 {
-                    b.Navigation("CutAfterWords");
-
                     b.Navigation("MustContainWords");
+
+                    b.Navigation("MustnotContainFilters");
 
                     b.Navigation("ReplaceWords");
                 });

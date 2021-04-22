@@ -39,7 +39,7 @@ namespace NewsConcentratorSystem.NewsScraper
         {
             bot = new TelegramBotClient("1614127935:AAGWfaa6RwOrrUGH2V0AR9phluns7ScvpFk");
             //bot.SendTextMessageAsync(new ChatId(-1001266511682), "Just setting khbrdnn.");
-            var me = bot.GetMeAsync().Result;
+            //var me = bot.GetMeAsync().Result;
             //bot.SendTextMessageAsync(new ChatId(-1001479837640), "Hello word.!");
             //keepconnected_timer.Elapsed += OnkeepAlive;
             _Bot = new ContentSenderTelegramBot(bot, "@bogbogbowbow");
@@ -674,17 +674,17 @@ namespace NewsConcentratorSystem.NewsScraper
                                     Mediahash = media != null ? hasher.Getfilehash(media) : null
 
                                 };
-                                    
-                                //Calling marker
+
+                            //Calling marker
                                 MarkasPublished(news);
-                            ;
 
 
 
 
 
 
-                                _Bot.SendPhotoMessage(mediafilestream,
+
+                            _Bot.SendPhotoMessage(mediafilestream,
                                     settings.StartDescription + "\n" + photo.Caption + "\n" + settings.EndDescription);
                                 Thread.Sleep(6000);
                             }
@@ -724,7 +724,7 @@ namespace NewsConcentratorSystem.NewsScraper
             }
         }
         //Save news on PublishedNewses table
-        public void MarkasPublished(News news)
+        public void  MarkasPublished(News news)
         {
             _Context.PublishedNewses.Add(news);
             _Context.SaveChanges();

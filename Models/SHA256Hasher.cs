@@ -15,9 +15,10 @@ namespace NewsConcentratorSystem.Models
             sha256 = SHA256.Create();
         }
 
-       public string Getfilehash(byte[] mediaBytes)
-       {
-           return sha256.ComputeHash(mediaBytes).ToString();
-       }
+        public string Getfilehash(byte[] mediaBytes)
+        {
+            var hashedbytes = sha256.ComputeHash(mediaBytes);
+            return System.Text.Encoding.UTF8.GetString(hashedbytes);
+        }
     }
 }

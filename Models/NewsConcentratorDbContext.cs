@@ -10,14 +10,14 @@ namespace NewsConcentratorSystem.Models
 {
     public class NewsConcentratorDbContext : DbContext
     {
-        public NewsConcentratorDbContext(DbContextOptions options) :base(options)
+        public NewsConcentratorDbContext(DbContextOptions options) : base(options)
         {
-            
+
         }
 
         public NewsConcentratorDbContext()
         {
-            
+
         }
         public DbSet<TelegramChannel> Channels { set; get; }
         public DbSet<MessageMustContain> MessageMustContains { get; set; }
