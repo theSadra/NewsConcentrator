@@ -16,9 +16,9 @@ namespace NewsConcentratorSystem.Models
         public int id { get; set; }
         [AllowNull]
         public string Mediahash { get; set; }
-        [NotNull]
+        [AllowNull]
         public string TextMessage { get; set; }
-
+        public DateTime DateAdded { get; set; }
 
 
 
