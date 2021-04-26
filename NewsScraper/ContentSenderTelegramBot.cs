@@ -14,8 +14,7 @@ namespace NewsConcentratorSystem.NewsScraper
     public class ContentSenderTelegramBot
     {
         public TelegramBotClient _BotClient;
-        public static string _DestinatnUsername;
-        public ContentSenderTelegramBot(TelegramBotClient botClient, string Destinatn)
+        public ContentSenderTelegramBot(TelegramBotClient botClient)
         {
             this._BotClient = botClient;
             _BotClient.StartReceiving();
