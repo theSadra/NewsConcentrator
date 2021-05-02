@@ -14,6 +14,7 @@ namespace NewsConcentratorSystem.NewsScraper
     public class ContentSenderTelegramBot
     {
         public TelegramBotClient _BotClient;
+        public static string _DestinatnUsername;
         public ContentSenderTelegramBot(TelegramBotClient botClient)
         {
             this._BotClient = botClient;
@@ -41,8 +42,8 @@ namespace NewsConcentratorSystem.NewsScraper
             try
             {
                 _BotClient.SendPhotoAsync(new ChatId(-1001266511682), new InputOnlineFile(fileStream), caption + "\n\n" + "@Khabardun1").Wait();
-                Thread.Sleep(1250);
-                _BotClient.SendPhotoAsync(new ChatId(-1001230277569), new InputOnlineFile(fileStream), caption + "\n\n" + "@AFLAKIUN1").Wait();
+                Thread.Sleep(3000);
+                //_BotClient.SendPhotoAsync(new ChatId(-1001230277569), new InputOnlineFile(fileStream), caption + "\n\n" + "@AFLAKIUN1").Wait();
             }
             catch (Exception e)
             {

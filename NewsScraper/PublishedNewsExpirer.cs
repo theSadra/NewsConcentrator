@@ -21,16 +21,26 @@ namespace NewsConcentratorSystem.NewsScraper
 
 
 
-        public void Expirer(object source, ElapsedEventArgs e)
+        public void Expirer()
         {
             var now = DateTime.Now;
             
             //Getting expired newses form db.
-            var expired = _context.PublishedNewses.AsNoTracking().Where(n => (int) (now - n.DateAdded).TotalHours > _newshourLifetime);
+
+            foreach (var pNewse in _context.PublishedNewses.ToList())
+            {
+                int hourpublished = (int) (now - pNewse.DateAdded).TotalHours;
+
+
+                if (hourpublished > _newshourLifetime)
+                {
+                    _context.PublishedNewses.RemoveRange(pNewse);
+                }
+
+            }
 
             //Removing expired newses from db.
 
-            _context.PublishedNewses.RemoveRange(expired);
             _context.SaveChanges();
 
         }

@@ -64,13 +64,13 @@ namespace NewsConcentratorSystem.Controllers
                 {
                     TelegramCollector.mustwait = true;
                     TelegramCollector.mustwaittilme = 15000;
-                    Thread.Sleep(4000);
+                    Thread.Sleep(5000);
                     var channel = TelegramClientManager.GetTChannelbyUsername(telegramChannel.ChannelUserName);
                     if (channel == null)
                     {
                         return RedirectToAction(nameof(Index));
                     }
-                    Thread.Sleep(4500);
+                    Thread.Sleep(8000);
                     NewsConcentratorSystem.NewsScraper.TelegramClientManager
                         .JoinChannel(telegramChannel.ChannelUserName)
                         .Wait();

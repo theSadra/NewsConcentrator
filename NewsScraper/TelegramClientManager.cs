@@ -10,6 +10,7 @@ using TLSharp.Utils;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Schema;
 using TLSchema.Channels;
@@ -163,11 +164,12 @@ namespace NewsConcentratorSystem.NewsScraper
 
         public static TLChannel GetTChannelbyUsername(string channelUsername)
         {
+            Thread.Sleep(3000);
             var found =  _client.SearchUserAsync(channelUsername).Result;
             return found.Chats.Where(c => c.GetType() == typeof(TLChannel)).Cast<TLChannel>().Where(c => c.Username.ToString().ToLower() == channelUsername.ToLower()).FirstOrDefault();
         }
 
-        public static async Task<IEnumerable<TLMessage>> GetChannelUnreadmessages(string channelUsername, TLDialogsSlice dialogs)
+        public static async Task<IEnumerable<TLMessage>> GetChannelUnreadmessages(string channelUsername, TLDialogs dialogs)
         {
 
 

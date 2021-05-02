@@ -28,32 +28,51 @@ namespace NewsConcentratorSystem
         public static void Main(string[] args)
         {
 
-   
 
+         
 
             #region TelegramClientConfiguraition
 
 
 
 
-            int app_id = 2372991;
-            string api_hash = "c7f27d96d2b3409d0b48d9682a3314a4";
+            int app_id = 4290367;
+            string api_hash = "4bf7b77ff1072c71f94e3ff4a883777a";
             var store = new FileSessionStore();
 
-            try
-            {
 
-                client = new TelegramClient(app_id, api_hash, store);
 
-            }
-            catch (Exception e)
+            Console.WriteLine("Choose authentication method:\n");
+            Console.WriteLine("1) Login by phone number authentication");
+            Console.WriteLine("2) Store last session file");
+
+
+
+
+            var cki = Console.ReadKey();
+            if (cki.KeyChar == '2')
             {
-                Console.WriteLine(e);
-                Environment.Exit(-1);
+                try
+                {
+
+                    client = new TelegramClient(app_id, api_hash, store);
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    Environment.Exit(-1);
+                }
+                TelegramClientManager._client = client;
             }
-            TelegramClientManager._client = client;
-            //TelegramClientManager.CreateClientbyAuthorize(app_id, api_hash).Wait();
-            //client = TelegramClientManager._client;
+
+            else if(cki.KeyChar == '1')
+            {
+                TelegramClientManager.CreateClientbyAuthorize(app_id, api_hash).Wait();
+                client = TelegramClientManager._client;
+            }
+
+ 
 
 
             while (true)

@@ -11,7 +11,7 @@ namespace NewsConcentratorSystem.NewsScraper
     public class RepetitiousNewsTextDetector
     {
         private IQueryable<News> _publishedNewses;
-        private int _similarityPercentage;
+        private double _similarityPercentage;
         private News currentNews;
 
         public RepetitiousNewsTextDetector(IQueryable<News> publisedneNewses, int similarityPercentage)
@@ -34,14 +34,12 @@ namespace NewsConcentratorSystem.NewsScraper
                     ? newssplitedwords.Count()
                     : pnewssplitedwords.Count();
                 //if the common words count on News, be same or higher than _similarityPercentage => is same news
-                if ((commonwords / news.TextMessage.Length) * 100 >= _similarityPercentage)
+                double samepercentage = ((double)commonwords / (double)lowestextnews)*100;
+                Console.WriteLine($"______--------{samepercentage}--------______");
+                if (samepercentage >= _similarityPercentage)
                 {
                     //Same news :)
                     return true;
-                }
-                else
-                {
-                    return false;
                 }
 
             }
@@ -49,8 +47,6 @@ namespace NewsConcentratorSystem.NewsScraper
             return false;
 
         }
-
-
 
 
 

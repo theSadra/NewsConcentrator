@@ -13,6 +13,6 @@ namespace NewsConcentratorSystem.Models
         [Required]
         public string Word { get; set; }
         [Required]
-        public string ReplaceTo { get; set; }
+        public string? ReplaceTo { get; set; }
     }
 }
